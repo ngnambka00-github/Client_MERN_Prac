@@ -22,9 +22,7 @@ const AuthContextProvider = ({ children }) => {
         // Nếu axios không hợp lệ thì xóa token đó tại localStorage
         try {
             const response = await axios.get(`${apiUrl}/auth`)
-            console.log("abcd")
             if (response.data.success) {
-                console.log("abcd")
                 dispatch({
                     type: "SET_AUTH",
                     payload: {

@@ -1,67 +1,78 @@
-import React, { useState, useContext } from "react"
+import React, { useState, useContext, useEffect } from "react"
 import { Modal, Button, Form } from "react-bootstrap"
 import { PostContext } from "../../contexts/PostContext"
 import { toast } from "react-toastify"
 import _ from "lodash"
 
-const AddPostModal = () => {
+const UpdatePostModal = () => {
     // Context
-    const { showAddPostModal, setShowAddPostModal, addPost } =
-        useContext(PostContext)
+    const {
+        postState: { postUpdate },
+        showUpdatePostModal,
+        setShowUpdatePostModal,
+        updatePost,
+    } = useContext(PostContext)
 
     // State
-    const [newPost, setNewPost] = useState({
+    const [post, setPost] = useState({
         title: "",
         description: "",
         url: "",
         status: "TO LEARN",
     })
 
+    useEffect(() => {
+        if (postUpdate) {
+            setPost({
+                title: postUpdate.title,
+                description: postUpdate.description,
+                url: postUpdate.url,
+                status: postUpdate.status,
+            })
+        }
+    }, [postUpdate])
+
     // local state
-    const { title, description, url, status } = newPost
+    const { title, description, url, status } = post
 
     // set event change input
-    const onChangeNewPostForm = (event) =>
-        setNewPost({ ...newPost, [event.target.name]: event.target.value })
-
-    // reset Form data input
-    const resetAddPostData = () => {
-        setNewPost({
-            title: "",
-            description: "",
-            url: "",
-            status: "TO LEARN",
+    const onChangeUpdatePostForm = (event) => {
+        setPost({
+            ...post,
+            [event.target.name]: event.target.value,
         })
-        setShowAddPostModal(false)
     }
 
     // event close modal
     const closeDialog = () => {
-        resetAddPostData()
+        setShowUpdatePostModal(false)
     }
 
     // event submit form
     const onSubmit = async (event) => {
         event.preventDefault()
-        const { success, message } = await addPost(newPost)
+        const { success, message } = await updatePost({
+            ...post,
+            _id: postUpdate._id,
+        })
         if (success) {
             toast.success(_.capitalize(message))
         } else {
             toast.error(_.capitalize(message))
         }
-        resetAddPostData()
+        setShowUpdatePostModal(false)
     }
 
     return (
         <Modal
-            show={showAddPostModal}
+            show={showUpdatePostModal}
             size="lg"
             centered
             animation={true}
             onHide={closeDialog}
         >
             <Modal.Header closeButton>
-                <Modal.Title>What do you want to learn?</Modal.Title>
+                <Modal.Title>Make process?</Modal.Title>
             </Modal.Header>
             <Form onSubmit={onSubmit}>
                 <Modal.Body>
@@ -73,7 +84,7 @@ const AddPostModal = () => {
                             require
                             aria-describedby="title-help"
                             value={title}
-                            onChange={onChangeNewPostForm}
+                            onChange={onChangeUpdatePostForm}
                         />
                         <Form.Text id="title-help" muted>
                             Required
@@ -87,7 +98,7 @@ const AddPostModal = () => {
                             placeholder="Description"
                             name="description"
                             value={description}
-                            onChange={onChangeNewPostForm}
+                            onChange={onChangeUpdatePostForm}
                         />
                     </Form.Group>
 
@@ -97,8 +108,22 @@ const AddPostModal = () => {
                             placeholder="Youtube Tutorial"
                             name="url"
                             value={url}
-                            onChange={onChangeNewPostForm}
+                            onChange={onChangeUpdatePostForm}
                         />
+                    </Form.Group>
+
+                    <Form.Group>
+                        <Form.Control
+                            as="select"
+                            placeholder="Youtube Tutorial"
+                            name="status"
+                            value={status}
+                            onChange={onChangeUpdatePostForm}
+                        >
+                            <option value="TO LEARN">TO LEARN</option>
+                            <option value="LEARNING">LEARNING</option>
+                            <option value="LEARNED">LEARNED</option>
+                        </Form.Control>
                     </Form.Group>
                 </Modal.Body>
 
@@ -107,7 +132,7 @@ const AddPostModal = () => {
                         Cancel
                     </Button>
                     <Button variant="success" type="submit">
-                        LearnIt
+                        Update Post
                     </Button>
                 </Modal.Footer>
             </Form>
@@ -115,4 +140,4 @@ const AddPostModal = () => {
     )
 }
 
-export default AddPostModal
+export default UpdatePostModal

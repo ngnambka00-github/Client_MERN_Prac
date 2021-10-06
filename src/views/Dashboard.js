@@ -1,9 +1,10 @@
-import React, { useState } from "react"
+import React from "react"
 import { PostContext } from "../contexts/PostContext"
 import { useContext, useEffect } from "react"
 import { AuthContext } from "../contexts/AuthContext"
 import SinglePost from "../components/posts/SinglePost"
 import AddPostModal from "../components/posts/AddPostModal"
+import UpdatePostModal from "../components/posts/UpdatePostModal"
 import addIcon from "../assets/plus-circle-fill.svg"
 import {
     OverlayTrigger,
@@ -24,7 +25,7 @@ const Dashboard = () => {
     } = useContext(AuthContext)
 
     const {
-        postState: { posts, postLoading },
+        postState: { posts, postLoading, postUpdate },
         getPosts,
         setShowAddPostModal,
     } = useContext(PostContext)
@@ -47,7 +48,12 @@ const Dashboard = () => {
                             Click to button bellow to track your first skill to
                             learn
                         </Card.Text>
-                        <Button variant="primary">LearnIt</Button>
+                        <Button
+                            variant="primary"
+                            onClick={setShowAddPostModal.bind(this, true)}
+                        >
+                            LearnIt
+                        </Button>
                     </Card.Body>
                 </Card>
             </>
@@ -93,6 +99,7 @@ const Dashboard = () => {
         <>
             {body}
             <AddPostModal />
+            <UpdatePostModal />
         </>
     )
 }

@@ -8,6 +8,8 @@ import Dashboard from "./views/Dashboard"
 import ProtectedRoute from "./components/routing/ProtectedRoute"
 import About from "./views/About"
 import PostContextProvider from "./contexts/PostContext"
+import { ToastContainer } from "react-toastify"
+import "react-toastify/dist/ReactToastify.css"
 
 const App = () => {
     return (
@@ -38,6 +40,19 @@ const App = () => {
                         <ProtectedRoute exact path="/about" component={About} />
                     </Switch>
                 </Router>
+
+                <ToastContainer
+                    position="top-right"
+                    autoClose={4000}
+                    hideProgressBar={false}
+                    newestOnTop={false}
+                    closeOnClick
+                    rtl={false}
+                    pauseOnFocusLoss={false}
+                    draggable
+                    pauseOnHover={false}
+                    theme="colored"
+                />
             </PostContextProvider>
         </AuthContextProvider>
     )
